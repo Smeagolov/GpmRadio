@@ -4,6 +4,7 @@
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue.svg)](LICENSE)
 [![No API Key](https://img.shields.io/badge/API_key-not_required-orange)](#data-sources)
 [![PWA Ready](https://img.shields.io/badge/PWA-installable-5A0FC8)](#progressive-web-app-pwa)
+[![Docker](https://img.shields.io/badge/Docker-ghcr.io-2496ED?logo=docker&logoColor=white)](#-docker)
 
 **[▶ Try the live demo](https://jailsonsb2.github.io/RadioPlayer/)** — a modern, dependency-free **HTML5 radio player** for any stream (**Icecast, Shoutcast, Zeno.FM, RadioJar, Azuracast** and more): the album art of the current song becomes a blurred full-page backdrop, with glass-style circular controls on top. Now playing metadata, album art, song lyrics, recently played history, **YouTube clip mode** and installable **PWA** — no Bootstrap, no jQuery, no API key. Just HTML, CSS and vanilla JavaScript.
 
@@ -49,17 +50,19 @@
 
 ## How do I add this radio player to my website?
 
-Open [js/script.js](js/script.js) and edit the lines below:
+Open [config.js](config.js) and edit the lines below:
 
 ```javascript
-// RADIO NAME
-const RADIO_NAME = 'Your Radio Name';
+window.RADIO_CONFIG = {
+    // RADIO NAME
+    RADIO_NAME: 'Your Radio Name',
 
-// Change Stream URL Here. Supports ICECAST, ZENO, SHOUTCAST, RADIOJAR and any other stream service.
-const URL_STREAMING = 'https://stream.zeno.fm/yn65fsaurfhvv';
+    // Change Stream URL Here. Supports ICECAST, ZENO, SHOUTCAST, RADIOJAR and any other stream service.
+    URL_STREAMING: 'https://stream.zeno.fm/yn65fsaurfhvv',
+};
 ```
 
-The metadata API URLs are derived from `URL_STREAMING` automatically.
+The metadata API URLs are derived from `URL_STREAMING` automatically. If `config.js` is missing, the player falls back to the defaults in [js/script.js](js/script.js).
 
 ### Change Logo
 
@@ -86,11 +89,58 @@ Just put the files in your server or use Free Hosting:
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/jailsonsb2/RadioPlayer)
 [![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/jailsonsb2/RadioPlayer)
 
+### 🐳 Docker
+
+Self-hosting? Run it in one line — no need to clone the repo or edit any file:
+
+```bash
+docker run -d -p 8080:80 \
+  -e RADIO_NAME="My Radio" \
+  -e URL_STREAMING="https://stream.zeno.fm/yn65fsaurfhvv" \
+  --name radioplayer ghcr.io/jailsonsb2/radioplayer:latest
+```
+
+The player is at `http://localhost:8080`. Or with Docker Compose — see [docker-compose.yml](docker-compose.yml):
+
+```bash
+docker compose up -d
+```
+
+**Environment variables**
+
+| Variable | Default | Description |
+|---|---|---|
+| `RADIO_NAME` | `Jailson Web Rádio` | Radio name (header, page title, PWA) |
+| `URL_STREAMING` | Zeno.FM demo stream | Stream URL (Icecast, Shoutcast, Zeno.FM, Azuracast...) |
+| `API_URL` | derived from the stream | Only if you run your own metadata API |
+| `FALLBACK_API_URL` | derived from the stream | Fallback metadata endpoint |
+| `ACCENT_COLOR` | `#00e1e7` | Accent color (`--accent`) |
+| `BG_COLOR` | `#0b0e13` | Page background (`--bg`) |
+| `THEME_COLOR` | `#0b0e13` | PWA theme color |
+| `PWA_NAME` | same as `RADIO_NAME` | App name on install |
+| `PWA_SHORT_NAME` | same as `PWA_NAME` | Short name (home screen icon) |
+
+The container generates `config.js` and `manifest.json` from these on startup, so changing a variable and restarting is enough — **no rebuild required**.
+
+**Your own logo** — mount it over the default cover:
+
+```bash
+-v ./my-logo.png:/usr/share/nginx/html/img/cover.png:ro
+```
+
+**Building locally** instead of pulling the image:
+
+```bash
+docker build -t radioplayer .
+```
+
+The image is built for `linux/amd64` and `linux/arm64` (Raspberry Pi, ARM NAS).
+
 ### Progressive Web App (PWA)
 
 When the browser signals that installation is available, an "Install app" button appears (top-right on desktop, bottom of the screen on mobile).
 
-**Note:** after deploying an update, bump the service worker cache version in `service-worker.js` (`CACHE_NAME`) so returning visitors get the new files.
+**Note:** the service worker fetches the HTML and `config.js` from the network first, so a configuration change reaches returning visitors on the next load. After a bigger update (CSS/JS), still bump the cache version in `service-worker.js` (`CACHE_NAME`) to force everything to refresh at once.
 
 ### Configuring Radio Name and Colors (PWA)
 
