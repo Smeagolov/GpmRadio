@@ -1,11 +1,20 @@
-const RADIO_NAME = 'Jailson Web Rádio';
+// A configuração vem do config.js (que o Docker gera a partir das variáveis de
+// ambiente). Os valores abaixo são o fallback usado quando não há config.js.
+const CONFIG = window.RADIO_CONFIG || {};
+
+// RADIO NAME
+const RADIO_NAME = CONFIG.RADIO_NAME || 'Jailson Web Rádio';
 
 // Change Stream URL Here, Supports, ICECAST, ZENO, SHOUTCAST, RADIOJAR and any other stream service.
-const URL_STREAMING = 'https://stream.zeno.fm/yn65fsaurfhvv';
+const URL_STREAMING = CONFIG.URL_STREAMING || 'https://stream.zeno.fm/yn65fsaurfhvv';
 
 //API URL /
-const API_URL = 'https://api.twj.es/?url='+URL_STREAMING;
-const FALLBACK_API_URL = 'https://api.twj.es/metadata/?url=' + URL_STREAMING;
+const API_URL = CONFIG.API_URL || 'https://api.twj.es/?url='+URL_STREAMING;
+const FALLBACK_API_URL = CONFIG.FALLBACK_API_URL || 'https://api.twj.es/metadata/?url=' + URL_STREAMING;
+
+// Tema opcional (usado pelas variáveis de ambiente do Docker)
+if (CONFIG.ACCENT_COLOR) document.documentElement.style.setProperty('--accent', CONFIG.ACCENT_COLOR);
+if (CONFIG.BG_COLOR) document.documentElement.style.setProperty('--bg', CONFIG.BG_COLOR);
 
 let userInteracted = true;
 
