@@ -14,8 +14,8 @@ window.RADIO_CONFIG = {
 
     // Opcionais: por padrão as URLs da API de metadados são derivadas do
     // URL_STREAMING. Só preencha se você usa a sua própria API.
-    // API_URL: '',
-    // FALLBACK_API_URL: '',
+     API_URL: 'https://aphrodite.freespirits.gr/api/nowplaying/gpm_radio',
+     FALLBACK_API_URL: '',
 
     // Opcionais: sobrescrevem as variáveis de tema do css/style.css
     // ACCENT_COLOR: '#00e1e7',
