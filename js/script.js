@@ -166,17 +166,27 @@ class Page {
                 let art;
                 let cover;
 
-                if (apiArt) {
-                    // A API do twj.es já entrega a capa pronta (albumArt) —
-                    // usar direto evita uma busca extra e capas erradas
-                    // por fuzzy match
-                    art = apiArt;
-                    cover = apiArt.replace('600x600', '1500x1500');
-                } else {
-                    const data = await getCoverData(artist, song, defaultCoverArt, defaultCoverArt);
-                    art = data.art;
-                    cover = data.cover;
-                }
+                const isPlaceholder = apiArt && apiArt.includes("GYtnLDO.png");
+
+if (apiArt && !isPlaceholder) {
+    // Κανονικό artwork από το API
+    art = apiArt;
+    cover = apiArt.replace('600x600', '1500x1500');
+} else if (isPlaceholder) {
+    // Το COVER SOON του παλιού template -> GPM Radio logo
+    art = defaultCoverArt;
+    cover = defaultCoverArt;
+} else {
+    // Δεν έδωσε artwork το API: δοκίμασε να βρεις πραγματικό album cover
+    const data = await getCoverData(
+        artist,
+        song,
+        defaultCoverArt,
+        defaultCoverArt
+    );
+    art = data.art;
+    cover = data.cover;
+}
 
                 // Aplica a imagem de capa (sempre, mesmo se for a padrão)
                 coverArt.style.backgroundImage = 'url(' + art + ')';
