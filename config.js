@@ -7,10 +7,10 @@
 // Se este arquivo não existir, o js/script.js cai nos valores padrão dele.
 window.RADIO_CONFIG = {
     // Nome da rádio, exibido no topo e no título da página
-    RADIO_NAME: 'Jailson Web Rádio',
+    RADIO_NAME: 'GpmRadio',
 
     // URL do stream. Suporta ICECAST, ZENO, SHOUTCAST, RADIOJAR e outros.
-    URL_STREAMING: 'https://stream.zeno.fm/yn65fsaurfhvv',
+    URL_STREAMING: 'https://aphrodite.freespirits.gr/listen/gpm_radio/radio.mp3',
 
     // Opcionais: por padrão as URLs da API de metadados são derivadas do
     // URL_STREAMING. Só preencha se você usa a sua própria API.
