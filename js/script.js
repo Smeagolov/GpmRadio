@@ -264,6 +264,21 @@ async function getStreamingData() {
         }
 
         if (data) {
+            // Live DJ / Streamer από AzuraCast
+const liveDjBox = document.getElementById("liveDj");
+const liveDjName = document.getElementById("liveDjName");
+
+const isLive = data.live && data.live.is_live;
+const streamerName = data.live && data.live.streamer_name;
+
+if (liveDjBox && liveDjName) {
+    if (isLive && streamerName) {
+        liveDjName.textContent = streamerName;
+        liveDjBox.hidden = false;
+    } else {
+        liveDjBox.hidden = true;
+    }
+}
             // Payload de carregamento: a API acabou de começar a monitorar
             // esta rádio. É um ESTADO, não uma música — mostrar o aviso e
             // NÃO buscar capa/letra de "Carregando...". musicaAtual fica
