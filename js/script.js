@@ -187,7 +187,14 @@ if (apiArt && !isPlaceholder) {
     art = data.art;
     cover = data.cover;
 }
-
+// Μπλοκάρει οριστικά το παλιό COVER SOON
+if (
+    (art && art.includes("GYtnLDO")) ||
+    (cover && cover.includes("GYtnLDO"))
+) {
+    art = defaultCoverArt;
+    cover = defaultCoverArt;
+}
                 // Aplica a imagem de capa (sempre, mesmo se for a padrão)
                 coverArt.style.backgroundImage = 'url(' + art + ')';
                 coverBackground.style.backgroundImage = 'url(' + cover + ')';
