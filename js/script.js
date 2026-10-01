@@ -201,7 +201,7 @@ if (
 // Αν δεν υπάρχει πραγματικό album cover,
 // χρησιμοποιούμε τη σταθερή GPM background εικόνα.
 if (art === defaultCoverArt || cover === defaultCoverArt) {
-    coverBackground.style.backgroundImage = "url('img/background.jpg')";
+    coverBackground.style.backgroundImage = "url('img/background.png')";
 } else {
     // Υπάρχει album cover: παραμένει το δυναμικό background.
     coverBackground.style.backgroundImage = 'url(' + cover + ')';
