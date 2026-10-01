@@ -206,6 +206,7 @@ if (art === defaultCoverArt || cover === defaultCoverArt) {
     coverBackground.style.backgroundImage = 'url(' + cover + ')';
     coverBackground.style.filter = "blur(64px) saturate(140%)";
     coverBackground.style.transform = "scale(1.4)";
+    }
                 // Lembra qual capa foi usada para esta música tocando agora,
                 // para o histórico reaproveitar quando ela aparecer lá
                 if (art && art !== defaultCoverArt) {
