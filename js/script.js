@@ -197,7 +197,15 @@ if (
 }
                 // Aplica a imagem de capa (sempre, mesmo se for a padrão)
                 coverArt.style.backgroundImage = 'url(' + art + ')';
-                coverBackground.style.backgroundImage = 'url(' + cover + ')';
+
+// Αν δεν υπάρχει πραγματικό album cover,
+// χρησιμοποιούμε τη σταθερή GPM background εικόνα.
+if (art === defaultCoverArt || cover === defaultCoverArt) {
+    coverBackground.style.backgroundImage = "url('img/background.jpg')";
+} else {
+    // Υπάρχει album cover: παραμένει το δυναμικό background.
+    coverBackground.style.backgroundImage = 'url(' + cover + ')';
+}
 
                 // Lembra qual capa foi usada para esta música tocando agora,
                 // para o histórico reaproveitar quando ela aparecer lá
