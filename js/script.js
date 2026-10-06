@@ -348,10 +348,13 @@ if (liveDjBox && liveDjName) {
                 const historicContainer = document.getElementById("historicSong");
                 historicContainer.innerHTML = "";
 
-                const historyArray = data.song_history
-                    ? data.song_history.map((item) => ({ song: item.song.title, artist: item.song.artist, youtubeId: item.song.youtubeId || "" }))
-                    : (data.history || []);
-
+              const historyArray = data.song_history
+    ? data.song_history.map((item) => ({
+        song: item.song?.title || item.song_title || "",
+        artist: item.song?.artist || item.song_artist || "",
+        youtubeId: item.song_youtubeId || ""
+    }))
+    : (data.history || []);
                 // A API inclui a música que está tocando agora no topo do
                 // histórico — filtra para não duplicar o now-playing
                 // (tolerante a sufixos tipo "Me Refaz (Ao Vivo)" vs "ME REFAZ")
