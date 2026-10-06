@@ -400,7 +400,7 @@ input[type=range]::-moz-range-thumb {
 }
 
 @media (min-width: 768px) {
-    .history-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .history-list { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
 #historicSong article {
