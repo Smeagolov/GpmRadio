@@ -345,69 +345,55 @@ if (liveDjBox && liveDjName) {
                 page.refreshCurrentSong(safeCurrentSong, safeCurrentArtist);
                 page.refreshLyric(safeCurrentSong, safeCurrentArtist);
 
-                const historicContainer = document.getElementById("historicSong");
-                historicContainer.innerHTML = "";
+const previousTrack = document.getElementById("previousTrack");
+const playingNowTrack = document.getElementById("playingNowTrack");
+const nextTrack = document.getElementById("nextTrack");
 
-              const historyArray = data.song_history
-    ? data.song_history.map((item) => ({
-        song: item.song?.title || item.song_title || "",
-        artist: item.song?.artist || item.song_artist || "",
-        youtubeId: item.song_youtubeId || ""
-    }))
-    : (data.history || []);
-                // A API inclui a música que está tocando agora no topo do
-                // histórico — filtra para não duplicar o now-playing
-                // (tolerante a sufixos tipo "Me Refaz (Ao Vivo)" vs "ME REFAZ")
-                const currentSongNorm = normalizeText(safeCurrentSong);
-                const currentArtistNorm = normalizeText(safeCurrentArtist);
-                const pastSongs = historyArray.filter((item) => {
-                    const itemSong = normalizeText(typeof item.song === "object" ? item.song.title : item.song);
-                    const itemArtist = normalizeText(typeof item.artist === "object" ? item.artist.title : item.artist);
-                    const sameSong = itemSong === currentSongNorm || itemSong.startsWith(currentSongNorm) || currentSongNorm.startsWith(itemSong);
-                    return !(itemArtist === currentArtistNorm && sameSong);
-                });
+function fillTrackCard(card, song, artist, art) {
+    if (!card) return;
 
-                // song_history vem do mais recente para o mais antigo:
-                // pega do TOPO (o slice antigo pegava as mais antigas)
-                const maxSongsToDisplay = 4; // Adjust as needed
-                const limitedHistory = pastSongs.slice(0, maxSongsToDisplay);
+    card.querySelector(".song").textContent = song || "Unknown";
+    card.querySelector(".artist").textContent = artist || "Unknown";
 
-                for (let i = 0; i < limitedHistory.length; i++) {
-                    const songInfo = limitedHistory[i];
-                    const article = document.createElement("article");
-                    article.classList.add("animated", "slideInRight");
-                    article.innerHTML = `
-                        <div class="cover-historic" style="background-image: url('img/cover.png');"></div>
-                        <div class="music-info">
-                          <div class="song"></div>
-                          <div class="artist"></div>
-                        </div>
-                      `;
-                    article.querySelector(".song").textContent = songInfo.song || "Desconhecido";
-                    article.querySelector(".artist").textContent = songInfo.artist || "Desconhecido";
+    const cover = card.querySelector(".cover-historic");
+    cover.style.backgroundImage = `url('${art || "img/cover.png"}')`;
+}
 
-                    // Música com clipe conhecido: o card vira um atalho para
-                    // assistir o vídeo da música que já tocou
-                    if (songInfo.youtubeId) {
-                        article.classList.add("has-clip");
-                        article.title = "Assistir o clipe de " + (songInfo.song || "");
-                        article.addEventListener("click", function () {
-                            playHistoryClip(songInfo);
-                        });
-                    }
+// PREVIOUS
+const previous = data.song_history && data.song_history.length
+    ? data.song_history[0]
+    : null;
 
-                    historicContainer.appendChild(article);
-                    setTimeout(() => article.classList.remove("animated", "slideInRight"), 2000);
-                    try {
-                        // Passa o elemento (e não o índice): se o histórico for
-                        // reconstruído enquanto a busca da capa está em voo, a
-                        // resposta atrasada não pinta o card errado
-                        page.refreshHistoric(songInfo, article);
-                    } catch (error) {
-                        console.error("Error refreshing historic song:", error);
-                    }
-                }
-                musicaAtual = safeCurrentSong;
+if (previous) {
+    fillTrackCard(
+        previousTrack,
+        previous.song?.title || previous.song_title || "",
+        previous.song?.artist || previous.song_artist || "",
+        previous.song?.art || previous.art || "img/cover.png"
+    );
+}
+
+// PLAYING NOW
+fillTrackCard(
+    playingNowTrack,
+    safeCurrentSong,
+    safeCurrentArtist,
+    data.now_playing?.song?.art || data.albumArt || data.art || "img/cover.png"
+);
+
+// NEXT
+const next = data.playing_next || null;
+
+if (next) {
+    fillTrackCard(
+        nextTrack,
+        next.song?.title || "",
+        next.song?.artist || "",
+        next.song?.art || "img/cover.png"
+    );
+}
+
+musicaAtual = safeCurrentSong;
             }
 
             // Modo clipe — fora do guard de música nova: a API resolve o
