@@ -376,9 +376,9 @@ if (previous) {
 // PLAYING NOW
 fillTrackCard(
     playingNowTrack,
-    safeCurrentSong,
-    safeCurrentArtist,
-    data.now_playing?.song?.art || data.albumArt || data.art || "img/cover.png"
+    data.now_playing?.song?.title || safeCurrentSong,
+    data.now_playing?.song?.artist || safeCurrentArtist,
+    data.now_playing?.song?.art || "img/cover.png"
 );
 
 // NEXT
